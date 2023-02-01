@@ -8,7 +8,7 @@ export default registerAs('database', () => ({
   password: process.env.DATABASE_PASSWORD,
   name: process.env.DATABASE_NAME,
   username: process.env.DATABASE_USERNAME,
-  synchronize: process.env.DATABASE_SYNCHRONIZE === 'true',
+  synchronize: process.env.DATABASE_SYNCHRONIZE === 'false',
   maxConnections: parseInt(process.env.DATABASE_MAX_CONNECTIONS, 10) || 100,
   sslEnabled: process.env.DATABASE_SSL_ENABLED === 'true',
   rejectUnauthorized: process.env.DATABASE_REJECT_UNAUTHORIZED === 'true',

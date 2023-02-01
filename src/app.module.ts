@@ -6,6 +6,7 @@ import appConfig from './config/app.config';
 import authConfig from './config/auth.config';
 import databaseConfig from './config/database.config';
 import { TypeOrmConfigService } from './database/typeorm-config.service';
+import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 
 @Module({
@@ -23,6 +24,7 @@ import { UsersModule } from './modules/users/users.module';
       },
     }),
     UsersModule,
+    AuthModule,
   ],
 })
-export class AppModule {}
+export class AppModule { }
