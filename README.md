@@ -13,7 +13,6 @@ NestJS REST API boilerplate for typical project
   - [Quick run](#quick-run)
   - [Comfortable development](#comfortable-development)
   - [Links](#links)
-  - [Automatic update of dependencies](#automatic-update-of-dependencies)
   - [Database utils](#database-utils)
   - [Tests](#tests)
   - [Tests in Docker](#tests-in-docker)
@@ -81,12 +80,7 @@ npm run start:dev
 ## Links
 
 - Swagger: http://localhost:3000/docs
-- Adminer (client for DB): http://localhost:8080
-- Maildev: http://localhost:1080
 
-## Automatic update of dependencies
-
-If you want to automatically update dependencies, you can connect [Renovate](https://github.com/marketplace/renovate) for your project.
 
 ## Database utils
 
