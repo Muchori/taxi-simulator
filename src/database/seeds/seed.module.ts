@@ -1,18 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import appConfig from 'src/config/app.config';
+import databaseConfig from 'src/config/database.config';
 import { DataSource } from 'typeorm';
-import appConfig from './config/app.config';
-import authConfig from './config/auth.config';
-import databaseConfig from './config/database.config';
-import { TypeOrmConfigService } from './database/typeorm-config.service';
-import { UsersModule } from './modules/users/users.module';
+import { TypeOrmConfigService } from '../typeorm-config.service';
+import { RoleSeedModule } from './role/role-seed.module';
+import { StatusSeedModule } from './status/status-seed.module';
+import { UserSeedModule } from './user/user-seed.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, authConfig, appConfig],
+      load: [databaseConfig, appConfig],
       envFilePath: ['.env'],
     }),
     TypeOrmModule.forRootAsync({
@@ -22,7 +23,9 @@ import { UsersModule } from './modules/users/users.module';
         return dataSource;
       },
     }),
-    UsersModule,
+    RoleSeedModule,
+    StatusSeedModule,
+    UserSeedModule,
   ],
 })
-export class AppModule {}
+export class SeedModule {}
