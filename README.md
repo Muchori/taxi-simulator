@@ -23,16 +23,12 @@ NestJS REST API boilerplate for typical project
 - [x] Database ([typeorm](https://www.npmjs.com/package/typeorm)).
 - [x] Seeding.
 - [x] Config Service ([@nestjs/config](https://www.npmjs.com/package/@nestjs/config)).
-- [x] Mailing ([nodemailer](https://www.npmjs.com/package/nodemailer), [@nestjs-modules/mailer](https://www.npmjs.com/package/@nestjs-modules/mailer)).
 - [x] Sign in and sign up via email.
-- [x] Social sign in (Apple, Facebook, Google, Twitter).
 - [x] Admin and User roles.
-- [x] I18N ([nestjs-i18n](https://www.npmjs.com/package/nestjs-i18n)).
 - [x] File uploads. Support local and Amazon S3 drivers.
 - [x] Swagger.
 - [x] E2E and units tests.
 - [x] Docker.
-- [x] CI (Github Actions).
 
 ## Quick run
 
@@ -81,13 +77,12 @@ npm run start:dev
 
 - Swagger: http://localhost:3000/docs
 
-
 ## Database utils
 
 Generate migration
 
 ```bash
-npm run migration:generate -- src/database/migrations/CreateNameTable 
+npm run migration:generate -- src/database/migrations/CreateNameTable
 ```
 
 Run migration
