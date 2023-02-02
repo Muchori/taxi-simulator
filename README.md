@@ -25,7 +25,6 @@ NestJS REST API boilerplate for typical project
 - [x] Config Service ([@nestjs/config](https://www.npmjs.com/package/@nestjs/config)).
 - [x] Sign in and sign up via email.
 - [x] Admin and User roles.
-- [x] File uploads. Support local and Amazon S3 drivers.
 - [x] Swagger.
 - [x] E2E and units tests.
 - [x] Docker.
@@ -52,10 +51,6 @@ git clone --depth 1 https://github.com/brocoders/nestjs-boilerplate.git my-app
 cd my-app/
 cp env-example .env
 ```
-
-Change `DATABASE_HOST=postgres` to `DATABASE_HOST=localhost`
-
-Change `MAIL_HOST=maildev` to `MAIL_HOST=localhost`
 
 Run additional container:
 
