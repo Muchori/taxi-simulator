@@ -2,7 +2,7 @@
 
 ## Description
 
-NestJS REST API boilerplate for typical project
+NestJS REST API simulating a taxi ordering ride by a passenger.
 
 ## Table of Contents
 
