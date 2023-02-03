@@ -1,4 +1,3 @@
-import { Ride } from './../../rides/entities/ride.entity';
 import { Expose, Exclude } from 'class-transformer';
 import * as bcrypt from 'bcryptjs';
 import {
