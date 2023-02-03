@@ -2,7 +2,6 @@ import {
   Column,
   AfterLoad,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   Index,
   ManyToOne,
@@ -75,7 +74,4 @@ export class User extends EntityHelper {
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @DeleteDateColumn()
-  deletedAt: Date;
 }

@@ -36,7 +36,7 @@ export class AuthController {
   @SerializeOptions({
     groups: ['me'],
   })
-  @Post('admin/email/login')
+  @Post('admin/login')
   @HttpCode(HttpStatus.OK)
   public async adminLogin(@Body() loginDTO: AuthEmailLoginDto) {
     return this.service.validateLogin(loginDTO, true);
