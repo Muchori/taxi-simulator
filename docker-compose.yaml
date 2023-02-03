@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:15.1
+    image: postgis/postgis
     ports:
       - ${DATABASE_PORT}:5432
     volumes:
@@ -9,6 +9,8 @@ services:
       POSTGRES_USER: ${DATABASE_USERNAME}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_EXTENSIONS: "postgis"
+    # command: sh -c "apt-get update && apt-get install -y postgis postgresql-15-postgis-3 postgresql-15-postgis-3-scripts && echo 'CREATE EXTENSION postgis;' | psql -U ${DATABASE_USERNAME} -d ${DATABASE_NAME}"
 
   api:
     build:

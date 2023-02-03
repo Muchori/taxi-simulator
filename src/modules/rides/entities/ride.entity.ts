@@ -1,5 +1,5 @@
 import { Driver } from './../../users/entities/driver.entity';
-import { Point } from 'geojson';
+import { Geometry, Point } from 'geojson';
 import { User } from 'src/modules/users/entities/user.entity';
 import { EntityHelper } from 'src/utils/entity-helper';
 import {
