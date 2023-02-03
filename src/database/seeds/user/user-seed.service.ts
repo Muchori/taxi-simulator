@@ -66,5 +66,32 @@ export class UserSeedService {
         }),
       );
     }
+
+    const countDriver = await this.repository.count({
+      where: {
+        role: {
+          id: RoleEnum.driver,
+        },
+      },
+    });
+
+    if (countDriver === 0) {
+      await this.repository.save(
+        this.repository.create({
+          firstName: 'Jane',
+          lastName: 'Doe',
+          email: 'jane.doe@example.com',
+          password: 'secret',
+          role: {
+            id: RoleEnum.user,
+            name: 'Driver',
+          },
+          status: {
+            id: StatusEnum.active,
+            name: 'Active',
+          },
+        }),
+      );
+    }
   }
 }

@@ -1,39 +1,47 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../users/entities/user.entity';
 import * as bcrypt from 'bcryptjs';
-import { AuthEmailLoginDto } from './dto/auth-email-login.dto';
+import * as crypto from 'crypto';
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
+
+import { User } from '../users/entities/user.entity';
+import { AuthEmailLoginDto } from './dto/auth-email-login.dto';
 import { RoleEnum } from 'src/modules/roles/roles.enum';
 import { StatusEnum } from 'src/modules/statuses/statuses.enum';
-import * as crypto from 'crypto';
 import { Status } from 'src/modules/statuses/entities/status.entity';
 import { Role } from 'src/modules/roles/entities/role.entity';
 import { AuthRegisterLoginDto } from './dto/auth-register-login.dto';
 import { UsersService } from 'src/modules/users/services/users.service';
 import { Driver } from '../users/entities/driver.entity';
+import { DriverService } from './../users/services/driver.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private usersService: UsersService,
+    private driverService: DriverService,
   ) {}
 
   async validateLogin(
     loginDto: AuthEmailLoginDto,
     onlyAdmin: boolean,
-  ): Promise<{ token: string; user: User }> {
-    const user = await this.usersService.findOne({
+  ): Promise<{ token: string; user: User | Driver }> {
+    const passenger = await this.usersService.findOne({
+      email: loginDto.email,
+    });
+
+    const driver = await this.driverService.findOne({
       email: loginDto.email,
     });
 
     if (
-      !user ||
-      (user &&
+      (!passenger && !driver) ||
+      (passenger &&
+        driver &&
         !(
           onlyAdmin ? [RoleEnum.admin] : [RoleEnum.user] && [RoleEnum.driver]
-        ).includes(user.role.id))
+        ).includes(passenger.role.id || driver.role.id))
     ) {
       throw new HttpException(
         {
@@ -48,16 +56,16 @@ export class AuthService {
 
     const isValidPassword = await bcrypt.compare(
       loginDto.password,
-      user.password,
+      passenger.password || driver.password,
     );
 
     if (isValidPassword) {
       const token = await this.jwtService.sign({
-        id: user.id,
-        role: user.role,
+        id: passenger.id || driver.driver_id,
+        role: passenger.role || driver.role,
       });
 
-      return { token, user: user };
+      return { token, user: passenger && driver };
     } else {
       throw new HttpException(
         {
@@ -80,6 +88,7 @@ export class AuthService {
     const user = await this.usersService.create({
       ...dto,
       email: dto.email,
+      phoneNumber: dto.phoneNumber,
       role: {
         id: RoleEnum.user || RoleEnum.driver,
       } as Role,
@@ -92,9 +101,5 @@ export class AuthService {
     return {
       user: user,
     };
-  }
-
-  async softDelete(user: User): Promise<void> {
-    await this.usersService.softDelete(user.id);
   }
 }

@@ -6,7 +6,7 @@ import { Transform } from 'class-transformer';
 export class AuthRegisterLoginDto {
   @ApiProperty({ example: 'test1@example.com' })
   @Transform(({ value }) => value.toLowerCase().trim())
-  @Validate(IsNotExist, ['User'], {
+  @Validate(IsNotExist, ['User', 'Driver'], {
     message: 'emailAlreadyExists',
   })
   @IsEmail()
@@ -23,4 +23,8 @@ export class AuthRegisterLoginDto {
   @ApiProperty({ example: 'Doe' })
   @IsNotEmpty()
   lastName: string;
+
+  @ApiProperty({ example: 'Doe' })
+  @IsNotEmpty()
+  phoneNumber: string;
 }

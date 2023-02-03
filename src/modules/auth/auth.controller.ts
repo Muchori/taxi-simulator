@@ -3,16 +3,12 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
-  Request,
   Post,
-  UseGuards,
-  Delete,
   SerializeOptions,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthEmailLoginDto } from './dto/auth-email-login.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { AuthRegisterLoginDto } from './dto/auth-register-login.dto';
 
 @ApiTags('Auth')
@@ -21,17 +17,7 @@ import { AuthRegisterLoginDto } from './dto/auth-register-login.dto';
   version: '1',
 })
 export class AuthController {
-  // eslint-disable-next-line prettier/prettier
-  constructor(public service: AuthService) { }
-
-  @SerializeOptions({
-    groups: ['me'],
-  })
-  @Post('login')
-  @HttpCode(HttpStatus.OK)
-  public async login(@Body() loginDto: AuthEmailLoginDto) {
-    return this.service.validateLogin(loginDto, false);
-  }
+  constructor(public service: AuthService) {}
 
   @SerializeOptions({
     groups: ['me'],
@@ -42,17 +28,18 @@ export class AuthController {
     return this.service.validateLogin(loginDTO, true);
   }
 
+  @SerializeOptions({
+    groups: ['me'],
+  })
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  public async login(@Body() loginDto: AuthEmailLoginDto) {
+    return this.service.validateLogin(loginDto, false);
+  }
+
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() createUserDto: AuthRegisterLoginDto) {
     return this.service.register(createUserDto);
-  }
-
-  @ApiBearerAuth()
-  @Delete('me')
-  @UseGuards(AuthGuard('jwt'))
-  @HttpCode(HttpStatus.OK)
-  public async delete(@Request() request) {
-    return this.service.softDelete(request.user);
   }
 }

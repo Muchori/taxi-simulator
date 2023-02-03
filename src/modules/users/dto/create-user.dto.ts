@@ -28,6 +28,10 @@ export class CreateUserDto {
   @IsNotEmpty()
   lastName: string | null;
 
+  @ApiProperty({ example: '0700000000' })
+  @IsNotEmpty()
+  phoneNumber: string | null;
+
   @ApiProperty({ type: Role })
   @Validate(IsExist, ['Role', 'id'], {
     message: 'roleNotExists',
