@@ -27,6 +27,21 @@ export class RoleSeedService {
       );
     }
 
+    const countDriver = await this.repository.count({
+      where: {
+        id: RoleEnum.driver,
+      },
+    });
+
+    if (countDriver === 0) {
+      await this.repository.save(
+        this.repository.create({
+          id: RoleEnum.driver,
+          name: 'Driver',
+        }),
+      );
+    }
+
     const countAdmin = await this.repository.count({
       where: {
         id: RoleEnum.admin,

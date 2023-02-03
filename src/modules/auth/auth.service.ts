@@ -10,7 +10,7 @@ import * as crypto from 'crypto';
 import { Status } from 'src/modules/statuses/entities/status.entity';
 import { Role } from 'src/modules/roles/entities/role.entity';
 import { AuthRegisterLoginDto } from './dto/auth-register-login.dto';
-import { UsersService } from 'src/modules/users/users.service';
+import { UsersService } from 'src/modules/users/services/users.service';
 import { Driver } from '../users/entities/driver.entity';
 
 @Injectable()

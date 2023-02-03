@@ -1,7 +1,5 @@
 import { Expose, Exclude } from 'class-transformer';
-import { Role } from 'src/modules/roles/entities/role.entity';
-import { Status } from 'src/modules/statuses/entities/status.entity';
-import { EntityHelper } from 'src/utils/entity-helper';
+import * as bcrypt from 'bcryptjs';
 import {
   AfterLoad,
   BeforeInsert,
@@ -16,7 +14,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import * as bcrypt from 'bcryptjs';
+
+import { Role } from 'src/modules/roles/entities/role.entity';
+import { Status } from 'src/modules/statuses/entities/status.entity';
+import { EntityHelper } from 'src/utils/entity-helper';
 import { User } from './user.entity';
 
 @Entity()
@@ -60,6 +61,10 @@ export class Driver extends EntityHelper {
   @Index()
   @Column({ nullable: true })
   lastName: string | null;
+
+  @Index()
+  @Column({ unique: true, nullable: true })
+  phoneNumber: string | null;
 
   @ManyToOne(() => Role, {
     eager: true,

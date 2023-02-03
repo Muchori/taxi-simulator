@@ -17,12 +17,12 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { infinityPagination } from 'src/utils/infinity-pagination';
-import { Roles } from '../roles/roles.decorator';
-import { RoleEnum } from '../roles/roles.enum';
-import { RolesGuard } from '../roles/roles.guard';
-import { DriverService } from './driver.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { Roles } from '../../roles/roles.decorator';
+import { RoleEnum } from '../../roles/roles.enum';
+import { RolesGuard } from '../../roles/roles.guard';
+import { DriverService } from '../services/driver.service';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
 
 @ApiBearerAuth()
 @Roles(RoleEnum.admin)
@@ -99,7 +99,7 @@ export class DriverController {
     groups: ['admin'],
   })
   @HttpCode(HttpStatus.OK)
-  @Post(':id/suspend')
+  @Post(':id/remove-suspend')
   async removeSuspend(@Param('id') driver_id: number): Promise<string> {
     await this.driverService.removeSuspend(driver_id);
 
