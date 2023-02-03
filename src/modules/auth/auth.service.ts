@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '../users/entities/user.entity';
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
 
-import { User } from '../users/entities/user.entity';
 import { AuthEmailLoginDto } from './dto/auth-email-login.dto';
 import { RoleEnum } from 'src/modules/roles/roles.enum';
 import { StatusEnum } from 'src/modules/statuses/statuses.enum';
@@ -26,22 +26,17 @@ export class AuthService {
   async validateLogin(
     loginDto: AuthEmailLoginDto,
     onlyAdmin: boolean,
-  ): Promise<{ token: string; user: User | Driver }> {
-    const passenger = await this.usersService.findOne({
-      email: loginDto.email,
-    });
-
-    const driver = await this.driverService.findOne({
+  ): Promise<{ token: string; user: User }> {
+    const user = await this.usersService.findOne({
       email: loginDto.email,
     });
 
     if (
-      (!passenger && !driver) ||
-      (passenger &&
-        driver &&
-        !(
-          onlyAdmin ? [RoleEnum.admin] : [RoleEnum.user] && [RoleEnum.driver]
-        ).includes(passenger.role.id || driver.role.id))
+      !user ||
+      (user &&
+        !(onlyAdmin ? [RoleEnum.admin] : [RoleEnum.user]).includes(
+          user.role.id,
+        ))
     ) {
       throw new HttpException(
         {
@@ -56,16 +51,66 @@ export class AuthService {
 
     const isValidPassword = await bcrypt.compare(
       loginDto.password,
-      passenger.password || driver.password,
+      user.password,
     );
 
     if (isValidPassword) {
       const token = await this.jwtService.sign({
-        id: passenger.id || driver.driver_id,
-        role: passenger.role || driver.role,
+        id: user.id,
+        role: user.role,
       });
 
-      return { token, user: passenger && driver };
+      return { token, user: user };
+    } else {
+      throw new HttpException(
+        {
+          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          errors: {
+            password: 'incorrectPassword',
+          },
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+  }
+  async validateDriverLogin(
+    loginDto: AuthEmailLoginDto,
+    onlyAdmin: boolean,
+  ): Promise<{ token: string; driver: Driver }> {
+    const driver = await this.driverService.findOne({
+      email: loginDto.email,
+    });
+
+    if (
+      !driver ||
+      (driver &&
+        !(onlyAdmin ? [RoleEnum.admin] : [RoleEnum.driver]).includes(
+          driver.role.id,
+        ))
+    ) {
+      throw new HttpException(
+        {
+          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          errors: {
+            email: 'notFound',
+          },
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+
+    const isValidPassword = await bcrypt.compare(
+      loginDto.password,
+      driver.password,
+    );
+
+    if (isValidPassword) {
+      const token = await this.jwtService.sign({
+        id: driver.driver_id,
+        role: driver.role,
+      });
+
+      return { token, driver: driver };
     } else {
       throw new HttpException(
         {

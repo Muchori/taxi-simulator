@@ -48,12 +48,12 @@ export class DriverService {
   }
 
   async suspend(driver_id: number): Promise<UpdateResult> {
-    return await this.driverRepository.update(driver_id, { isActive: false });
+    return await this.driverRepository.update(driver_id, { suspended: false });
   }
 
   async removeSuspend(driver_id: number): Promise<UpdateResult> {
     return await this.driverRepository.update(driver_id, {
-      isActive: true,
+      suspended: true,
     });
   }
 

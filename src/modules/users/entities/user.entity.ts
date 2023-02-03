@@ -17,6 +17,7 @@ import * as bcrypt from 'bcryptjs';
 import { EntityHelper } from 'src/utils/entity-helper';
 import { Exclude, Expose } from 'class-transformer';
 import { Driver } from './driver.entity';
+import { Ride } from 'src/modules/rides/entities/ride.entity';
 
 @Entity()
 export class User extends EntityHelper {
@@ -74,6 +75,9 @@ export class User extends EntityHelper {
     onDelete: 'CASCADE',
   })
   driver?: Driver;
+
+  @OneToOne(() => Ride, (ride) => ride.driver, { onDelete: 'CASCADE' })
+  ride: Ride;
 
   @Column({ nullable: true })
   @Index()

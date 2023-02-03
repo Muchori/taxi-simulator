@@ -31,10 +31,18 @@ export class AuthController {
   @SerializeOptions({
     groups: ['me'],
   })
-  @Post('login')
+  @Post('passenger/login')
   @HttpCode(HttpStatus.OK)
-  public async login(@Body() loginDto: AuthEmailLoginDto) {
+  public async uaerLogin(@Body() loginDto: AuthEmailLoginDto) {
     return this.service.validateLogin(loginDto, false);
+  }
+  @SerializeOptions({
+    groups: ['me'],
+  })
+  @Post('driver/login')
+  @HttpCode(HttpStatus.OK)
+  public async driverLogin(@Body() loginDto: AuthEmailLoginDto) {
+    return this.service.validateDriverLogin(loginDto, false);
   }
 
   @Post('register')

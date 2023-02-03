@@ -1,3 +1,4 @@
+import { Ride } from './../../rides/entities/ride.entity';
 import { Expose, Exclude } from 'class-transformer';
 import * as bcrypt from 'bcryptjs';
 import {
@@ -34,8 +35,8 @@ export class Driver extends EntityHelper {
   password: string;
 
   @Index()
-  @Column({ type: 'boolean', default: true, nullable: false })
-  isActive: boolean;
+  @Column({ type: 'boolean', default: false, nullable: false })
+  suspended: boolean;
 
   @Exclude({ toPlainOnly: true })
   public previousPassword: string;

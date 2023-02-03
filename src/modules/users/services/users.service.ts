@@ -14,27 +14,27 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  create(createProfileDto: CreateUserDto) {
-    return this.usersRepository.save(
+  async create(createProfileDto: CreateUserDto) {
+    return await this.usersRepository.save(
       this.usersRepository.create(createProfileDto),
     );
   }
 
-  findManyWithPagination(paginationOptions: IPaginationOptions) {
-    return this.usersRepository.find({
+  async findManyWithPagination(paginationOptions: IPaginationOptions) {
+    return await this.usersRepository.find({
       skip: (paginationOptions.page - 1) * paginationOptions.limit,
       take: paginationOptions.limit,
     });
   }
 
-  findOne(fields: EntityCondition<User>) {
-    return this.usersRepository.findOne({
+  async findOne(fields: EntityCondition<User>) {
+    return await this.usersRepository.findOne({
       where: fields,
     });
   }
 
-  update(id: number, updateProfileDto: UpdateUserDto) {
-    return this.usersRepository.save(
+  async update(id: number, updateProfileDto: UpdateUserDto) {
+    return await this.usersRepository.save(
       this.usersRepository.create({
         id,
         ...updateProfileDto,
