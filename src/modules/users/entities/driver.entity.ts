@@ -1,27 +1,28 @@
+import { Expose, Exclude } from 'class-transformer';
+import { Role } from 'src/modules/roles/entities/role.entity';
+import { Status } from 'src/modules/statuses/entities/status.entity';
+import { EntityHelper } from 'src/utils/entity-helper';
 import {
-  Column,
   AfterLoad,
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
   CreateDateColumn,
   Entity,
   Index,
+  JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  BeforeInsert,
-  BeforeUpdate,
-  OneToOne,
 } from 'typeorm';
-import { Role } from '../../roles/entities/role.entity';
-import { Status } from '../../statuses/entities/status.entity';
 import * as bcrypt from 'bcryptjs';
-import { EntityHelper } from 'src/utils/entity-helper';
-import { Exclude, Expose } from 'class-transformer';
-import { Driver } from './driver.entity';
+import { User } from './user.entity';
 
 @Entity()
-export class User extends EntityHelper {
+export class Driver extends EntityHelper {
   @PrimaryGeneratedColumn()
-  id: number;
+  driver_id: number;
 
   @Column({ unique: true, nullable: true })
   @Expose({ groups: ['me', 'admin'] })
@@ -66,10 +67,9 @@ export class User extends EntityHelper {
   })
   status?: Status;
 
-  @OneToOne(() => Driver, (driver) => driver.user, {
-    onDelete: 'CASCADE',
-  })
-  driver?: Driver;
+  @OneToOne(() => User, (user) => user.driver, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'driver_id' })
+  user: User;
 
   @Column({ nullable: true })
   @Index()
