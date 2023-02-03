@@ -29,7 +29,7 @@ import { infinityPagination } from 'src/utils/infinity-pagination';
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @ApiTags('Users')
 @Controller({
-  path: 'passengers',
+  path: 'passenger',
   version: '1',
 })
 export class UsersController {

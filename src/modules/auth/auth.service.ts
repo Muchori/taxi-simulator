@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../users/entities/user.entity';
@@ -12,13 +11,14 @@ import { Status } from 'src/modules/statuses/entities/status.entity';
 import { Role } from 'src/modules/roles/entities/role.entity';
 import { AuthRegisterLoginDto } from './dto/auth-register-login.dto';
 import { UsersService } from 'src/modules/users/users.service';
+import { Driver } from '../users/entities/driver.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private usersService: UsersService,
-  ) { }
+  ) {}
 
   async validateLogin(
     loginDto: AuthEmailLoginDto,
@@ -31,9 +31,9 @@ export class AuthService {
     if (
       !user ||
       (user &&
-        !(onlyAdmin ? [RoleEnum.admin] : [RoleEnum.user]).includes(
-          user.role.id,
-        ))
+        !(
+          onlyAdmin ? [RoleEnum.admin] : [RoleEnum.user] && [RoleEnum.driver]
+        ).includes(user.role.id))
     ) {
       throw new HttpException(
         {
@@ -71,7 +71,7 @@ export class AuthService {
     }
   }
 
-  async register(dto: AuthRegisterLoginDto): Promise<{ user: User }> {
+  async register(dto: AuthRegisterLoginDto): Promise<{ user: User | Driver }> {
     const hash = crypto
       .createHash('sha256')
       .update(randomStringGenerator())
@@ -81,7 +81,7 @@ export class AuthService {
       ...dto,
       email: dto.email,
       role: {
-        id: RoleEnum.user,
+        id: RoleEnum.user || RoleEnum.driver,
       } as Role,
       status: {
         id: StatusEnum.inactive,

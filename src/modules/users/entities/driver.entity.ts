@@ -32,6 +32,10 @@ export class Driver extends EntityHelper {
   @Exclude({ toPlainOnly: true })
   password: string;
 
+  @Index()
+  @Column({ type: 'boolean', default: true, nullable: false })
+  isActive: boolean;
+
   @Exclude({ toPlainOnly: true })
   public previousPassword: string;
 
