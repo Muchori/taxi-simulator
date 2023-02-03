@@ -32,8 +32,8 @@ NestJS REST API boilerplate for typical project
 ## Quick run
 
 ```bash
-git clone --depth 1 https://github.com/brocoders/nestjs-boilerplate.git my-app
-cd my-app/
+git clone --depth 1 git@github.com:Muchori/taxi-simulator.git
+cd taxi-simulator/
 cp env-example .env
 docker compose up -d
 ```
@@ -47,15 +47,15 @@ docker compose logs
 ## Comfortable development
 
 ```bash
-git clone --depth 1 https://github.com/brocoders/nestjs-boilerplate.git my-app
-cd my-app/
+git clone --depth 1 git@github.com:Muchori/taxi-simulator.git
+cd taxi-simulator/
 cp env-example .env
 ```
 
 Run additional container:
 
 ```bash
-docker compose up -d postgres adminer maildev redis
+docker compose up -d postgres
 ```
 
 ```bash
