@@ -41,10 +41,10 @@ export class Ride extends EntityHelper {
   })
   destination: Point;
 
-  @OneToOne(() => Driver, (driver) => driver.user, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'id' })
-  driver: Driver;
+  // @OneToOne(() => Driver, (driver) => driver.user, { onDelete: 'CASCADE' })
+  // @JoinColumn({ name: 'id' })
+  // driver: Driver;
 
-  @OneToOne(() => User, (user) => user.ride, { onDelete: 'CASCADE' })
-  user: User;
+  // @OneToOne(() => User, (user) => user.ride, { onDelete: 'CASCADE' })
+  // user: User;
 }

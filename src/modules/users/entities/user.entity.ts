@@ -76,7 +76,7 @@ export class User extends EntityHelper {
   })
   driver?: Driver;
 
-  @OneToOne(() => Ride, (ride) => ride.driver, { onDelete: 'CASCADE' })
+  @OneToOne(() => Ride, (ride) => ride.rideId, { onDelete: 'CASCADE' })
   ride: Ride;
 
   @Column({ nullable: true })

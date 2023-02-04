@@ -3,22 +3,20 @@ import { User } from './../users/entities/user.entity';
 import { CreateRideDto } from './dto/create-ride.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { InsertResult, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Ride } from './entities/ride.entity';
 import { Point } from 'geojson';
+import { Status } from '../statuses/entities/status.entity';
+import { StatusEnum } from '../statuses/statuses.enum';
 
 @Injectable()
 export class RideService {
   constructor(
     @InjectRepository(Ride)
     private readonly rideRepository: Repository<Ride>,
-  ) {}
+  ) { }
 
-  async ride(
-    user: User,
-    driver: Driver,
-    createRideDto: CreateRideDto,
-  ): Promise<{ result: InsertResult }> {
+  async createRide(createRideDto: CreateRideDto): Promise<Ride> {
     const pickupPoint: Point = {
       type: 'Point',
       coordinates: [
@@ -35,16 +33,17 @@ export class RideService {
       ],
     };
 
-    const ride = this.rideRepository.create({
+    const ride = await this.rideRepository.create({
       ...createRideDto,
       pickupPoint,
       destination,
-      user,
-      driver,
+      status: {
+        id: StatusEnum.inactive,
+      } as Status,
     });
 
-    const result = await this.rideRepository.insert(ride);
+    await this.rideRepository.insert(ride);
 
-    return { result };
+    return ride;
   }
 }
