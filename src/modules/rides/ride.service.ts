@@ -1,3 +1,4 @@
+import { Driver } from './../users/entities/driver.entity';
 import { User } from './../users/entities/user.entity';
 import { CreateRideDto } from './dto/create-ride.dto';
 import { Injectable } from '@nestjs/common';
@@ -15,6 +16,7 @@ export class RideService {
 
   async ride(
     user: User,
+    driver: Driver,
     createRideDto: CreateRideDto,
   ): Promise<{ result: InsertResult }> {
     const pickupPoint: Point = {
@@ -38,6 +40,7 @@ export class RideService {
       pickupPoint,
       destination,
       user,
+      driver,
     });
 
     const result = await this.rideRepository.insert(ride);

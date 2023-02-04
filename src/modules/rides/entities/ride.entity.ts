@@ -7,14 +7,21 @@ import {
   Entity,
   Index,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Status } from 'src/modules/statuses/entities/status.entity';
 
 @Entity('Ride')
 export class Ride extends EntityHelper {
   @PrimaryGeneratedColumn('uuid')
   rideId: string;
+
+  @ManyToOne(() => Status, {
+    eager: true,
+  })
+  status?: Status;
 
   @Index({ spatial: true })
   @Column({
