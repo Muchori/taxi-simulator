@@ -16,7 +16,6 @@ import { Status } from '../../statuses/entities/status.entity';
 import * as bcrypt from 'bcryptjs';
 import { EntityHelper } from 'src/utils/entity-helper';
 import { Exclude, Expose } from 'class-transformer';
-import { Driver } from './driver.entity';
 import { Ride } from 'src/modules/rides/entities/ride.entity';
 
 @Entity()

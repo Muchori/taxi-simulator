@@ -37,8 +37,6 @@ export class RideController {
       createRideDto,
     );
 
-    console.log(ride);
-
     return ride;
   }
 

@@ -61,6 +61,5 @@ export class DriverService {
     }
 
     return this.driverRepository.remove(result);
-    //await this.driverRepository.softDelete(driver_id);
   }
 }

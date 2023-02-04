@@ -8,7 +8,6 @@ import {
   CreateDateColumn,
   Entity,
   Index,
-  JoinColumn,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -18,7 +17,6 @@ import {
 import { Role } from 'src/modules/roles/entities/role.entity';
 import { Status } from 'src/modules/statuses/entities/status.entity';
 import { EntityHelper } from 'src/utils/entity-helper';
-import { User } from './user.entity';
 import { Ride } from 'src/modules/rides/entities/ride.entity';
 
 @Entity()
