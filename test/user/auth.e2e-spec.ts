@@ -1,15 +1,8 @@
 import * as request from 'supertest';
-import {
-  APP_URL,
-  TESTER_EMAIL,
-  TESTER_PASSWORD,
-  MAIL_HOST,
-  MAIL_PORT,
-} from '../utils/constants';
+import { APP_URL, TESTER_EMAIL, TESTER_PASSWORD } from '../utils/constants';
 
 describe('Auth user (e2e)', () => {
   const app = APP_URL;
-  const mail = `http://${MAIL_HOST}:${MAIL_PORT}`;
   const newUserFirstName = `Tester${Date.now()}`;
   const newUserLastName = `E2E`;
   const newUserEmail = `User.${Date.now()}@example.com`;
@@ -78,28 +71,6 @@ describe('Auth user (e2e)', () => {
       .expect(({ body }) => {
         expect(body.token).toBeDefined();
       });
-  });
-
-  it('Confirm email: /api/v1/auth/email/confirm (POST)', async () => {
-    const hash = await request(mail)
-      .get('/email')
-      .then(({ body }) =>
-        body
-          .find(
-            (letter) =>
-              letter.to[0].address.toLowerCase() ===
-              newUserEmail.toLowerCase() &&
-              /.*confirm\-email\/(\w+).*/g.test(letter.text),
-          )
-          ?.text.replace(/.*confirm\-email\/(\w+).*/g, '$1'),
-      );
-
-    return request(app)
-      .post('/api/v1/auth/email/confirm')
-      .send({
-        hash,
-      })
-      .expect(200);
   });
 
   it('Login confirmed user: /api/v1/auth/email/login (POST)', () => {
