@@ -1,3 +1,4 @@
+import { UpdateRideStatusDto } from './dto/update-ride.dto';
 import { UpdateResult } from 'typeorm';
 import { Ride } from 'src/modules/rides/entities/ride.entity';
 import { CreateRideDto } from './dto/create-ride.dto';
@@ -10,6 +11,7 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
   SerializeOptions,
@@ -55,9 +57,9 @@ export class RideController {
     return await this.rideService.ongoing();
   }
 
-  @Post(':id/stop')
+  @Patch('/:rideId/stop')
   @HttpCode(HttpStatus.OK)
-  async stop(@Param('ride-id') rideId: string) {
+  async stop(@Param('rideId') rideId: string) {
     return await this.rideService.stop(rideId);
   }
 

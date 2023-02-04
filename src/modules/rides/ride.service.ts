@@ -1,3 +1,4 @@
+import { UpdateRideStatusDto } from './dto/update-ride.dto';
 import { Driver } from './../users/entities/driver.entity';
 import { User } from './../users/entities/user.entity';
 import { CreateRideDto } from './dto/create-ride.dto';
@@ -63,12 +64,17 @@ export class RideService {
   async ongoing(): Promise<Ride[]> {
     return await this.rideRepository.find({
       where: {
-        status: RideStatus.done,
+        status: RideStatus.ongoing,
       },
     });
   }
 
-  async stop(rideId: string): Promise<UpdateResult> {
+  async stop(rideId: string) {
+    // const ride = await this.rideRepository.findOne({
+    //   where: { rideId },
+    // });
+    // ride.status = updateRideStatusDto.status;
+    // return await this.rideRepository.save(ride);
     return await this.rideRepository.update(rideId, {
       status: RideStatus.done,
     });

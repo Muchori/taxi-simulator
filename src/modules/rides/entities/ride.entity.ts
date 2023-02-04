@@ -7,11 +7,9 @@ import {
   Entity,
   Index,
   JoinColumn,
-  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Status } from 'src/modules/statuses/entities/status.entity';
 import { RideStatus } from '../status';
 
 @Entity('Ride')
