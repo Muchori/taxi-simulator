@@ -1,14 +1,25 @@
-import { User } from 'src/modules/users/entities/user.entity';
+import { UpdateResult } from 'typeorm';
 import { Ride } from 'src/modules/rides/entities/ride.entity';
 import { CreateRideDto } from './dto/create-ride.dto';
-import { Body, Controller, DefaultValuePipe, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Query, SerializeOptions, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  DefaultValuePipe,
+  Get,
+  HttpCode,
+  HttpStatus,
+  ParseIntPipe,
+  Post,
+  Query,
+  SerializeOptions,
+  UseGuards,
+} from '@nestjs/common';
 import { RideService } from './ride.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../roles/roles.decorator';
 import { RoleEnum } from '../roles/roles.enum';
 import { RolesGuard } from '../roles/roles.guard';
-import { Driver } from '../users/entities/driver.entity';
 import { infinityPagination } from 'src/utils/infinity-pagination';
 
 @ApiBearerAuth()
@@ -31,13 +42,18 @@ export class RideController {
     createRideDto.driverId = driver_id;
     createRideDto.passengerId = passenger_id;
 
-    const ride = await this.rideService.createRide(
-      passenger_id,
-      driver_id,
-      createRideDto,
-    );
+    const ride = await this.rideService.createRide(createRideDto);
 
     return ride;
+  }
+
+  @Get('ongoing')
+  async ongoing(): Promise<Ride[]> {
+    return await this.rideService.ongoing();
+  }
+
+  async stop(rideId: string): Promise<UpdateResult> {
+    return await this.rideService.stop(rideId);
   }
 
   @SerializeOptions({

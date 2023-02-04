@@ -3,7 +3,7 @@ import { User } from './../users/entities/user.entity';
 import { CreateRideDto } from './dto/create-ride.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { Ride } from './entities/ride.entity';
 import { Point } from 'geojson';
 import { Status } from '../statuses/entities/status.entity';
@@ -22,11 +22,7 @@ export class RideService {
     private readonly driverRepository: Repository<Driver>,
   ) { }
 
-  async createRide(
-    passengerId: number,
-    driverId: number,
-    createRideDto: CreateRideDto,
-  ): Promise<Ride> {
+  async createRide(createRideDto: CreateRideDto): Promise<Ride> {
     const passenger = await this.userRepository.findOne({
       where: {
         id: createRideDto.passengerId,
@@ -62,6 +58,22 @@ export class RideService {
     ride.status = RideStatus.ongoing;
 
     return await this.rideRepository.save(ride);
+  }
+
+  async ongoing(): Promise<Ride[]> {
+    return await this.rideRepository.find({
+      where: {
+        status: RideStatus.done,
+      },
+    });
+  }
+
+  async stop(rideId: string): Promise<UpdateResult> {
+    const ride = await this.rideRepository.update(rideId, {
+      status: RideStatus.done,
+    });
+
+    return ride;
   }
 
   findManyWithPagination(paginationOptions: IPaginationOptions) {
