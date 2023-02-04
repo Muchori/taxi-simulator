@@ -19,6 +19,7 @@ import { Role } from 'src/modules/roles/entities/role.entity';
 import { Status } from 'src/modules/statuses/entities/status.entity';
 import { EntityHelper } from 'src/utils/entity-helper';
 import { User } from './user.entity';
+import { Ride } from 'src/modules/rides/entities/ride.entity';
 
 @Entity()
 export class Driver extends EntityHelper {
@@ -76,9 +77,11 @@ export class Driver extends EntityHelper {
   })
   status?: Status;
 
-  @OneToOne(() => User, (user) => user.driver, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'driver_id' })
-  user: User;
+  // @OneToOne(() => User, (user) => user.driver, { onDelete: 'CASCADE' })
+  // user: User;
+
+  @OneToOne(() => Ride, (ride) => ride.driver, { onDelete: 'CASCADE' })
+  ride: Ride;
 
   @Column({ nullable: true })
   @Index()

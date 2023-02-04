@@ -12,16 +12,20 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Status } from 'src/modules/statuses/entities/status.entity';
+import { RideStatus } from '../status';
 
 @Entity('Ride')
 export class Ride extends EntityHelper {
   @PrimaryGeneratedColumn('uuid')
   rideId: string;
 
-  @ManyToOne(() => Status, {
-    eager: true,
+  @Column({
+    type: 'enum',
+    enum: RideStatus,
+    nullable: false,
+    default: RideStatus.ongoing,
   })
-  status?: Status;
+  status?: string;
 
   @Index({ spatial: true })
   @Column({
@@ -41,10 +45,11 @@ export class Ride extends EntityHelper {
   })
   destination: Point;
 
-  // @OneToOne(() => Driver, (driver) => driver.user, { onDelete: 'CASCADE' })
-  // @JoinColumn({ name: 'id' })
-  // driver: Driver;
+  @OneToOne(() => Driver, (driver) => driver.ride, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'driver_id' })
+  driver: Driver;
 
-  // @OneToOne(() => User, (user) => user.ride, { onDelete: 'CASCADE' })
-  // user: User;
+  @OneToOne(() => User, (user) => user.ride, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'passenger_id' })
+  user: User;
 }

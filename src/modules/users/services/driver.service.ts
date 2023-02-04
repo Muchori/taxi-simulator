@@ -12,17 +12,13 @@ export class DriverService {
   constructor(
     @InjectRepository(Driver)
     private readonly driverRepository: Repository<Driver>,
-  ) {}
+  ) { }
 
   async create(createProfileDto: CreateUserDto) {
     const driver = this.driverRepository.create(createProfileDto);
     await this.driverRepository.insert(driver);
 
     return driver;
-
-    // return this.driverRepository.save(
-    //   this.driverRepository.create(createProfileDto),
-    // );
   }
 
   findManyWithPagination(paginationOptions: IPaginationOptions) {
