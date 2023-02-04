@@ -8,6 +8,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   ParseIntPipe,
   Post,
   Query,
@@ -34,6 +35,7 @@ export class RideController {
   constructor(private readonly rideService: RideService) { }
 
   @Post(':id/:id')
+  @HttpCode(HttpStatus.OK)
   async createRide(
     @Body() createRideDto: CreateRideDto,
     @Query('passenger_id') passenger_id: number,
@@ -48,11 +50,14 @@ export class RideController {
   }
 
   @Get('ongoing')
+  @HttpCode(HttpStatus.OK)
   async ongoing(): Promise<Ride[]> {
     return await this.rideService.ongoing();
   }
 
-  async stop(rideId: string): Promise<UpdateResult> {
+  @Post(':id/stop')
+  @HttpCode(HttpStatus.OK)
+  async stop(@Param('ride-id') rideId: string) {
     return await this.rideService.stop(rideId);
   }
 

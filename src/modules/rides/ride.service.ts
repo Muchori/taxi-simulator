@@ -69,11 +69,9 @@ export class RideService {
   }
 
   async stop(rideId: string): Promise<UpdateResult> {
-    const ride = await this.rideRepository.update(rideId, {
+    return await this.rideRepository.update(rideId, {
       status: RideStatus.done,
     });
-
-    return ride;
   }
 
   findManyWithPagination(paginationOptions: IPaginationOptions) {
