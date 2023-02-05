@@ -10,6 +10,7 @@ NestJS REST API simulating a taxi ordering ride by a passenger.
   - [Description](#description)
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
+  - [Technlogies used](#technlogies-used)
   - [Quick run](#quick-run)
   - [Comfortable development](#comfortable-development)
   - [Links](#links)
@@ -28,6 +29,15 @@ NestJS REST API simulating a taxi ordering ride by a passenger.
 - [x] Swagger.
 - [x] E2E and units tests.
 - [x] Docker.
+
+## Technlogies used
+
+- [x] TypeScript / JavaScript
+- [x] NestJS Framework
+- [x] Docker for containerization
+- [x] Postgis / Postgres - Database
+- [x] Jest for testing
+- [x] Shell
 
 ## Quick run
 
