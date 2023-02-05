@@ -14,10 +14,10 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserProfileDto } from '../dto/user-profile.dto';
-import { UserUpdateDto } from '../dto/user-update.dto';
 import { IUsers } from '../interfaces/users.interface';
 import { DriverService } from '../services/driver.service';
 import { DriverDto } from '../dto/create-driver.dto';
+import { log } from 'console';
 
 @ApiBearerAuth()
 @ApiTags('Drivers')
@@ -31,15 +31,17 @@ export class DriverController {
   @Post()
   public async create(@Res() res, @Body() driverDto: DriverDto): Promise<any> {
     try {
-      await this.driverService.register(driverDto);
+      await this.driverService.registerDriver(driverDto);
 
       return res.status(HttpStatus.CREATED).json({
+        driverDto,
         message: 'Driver registration successfully!',
         status: HttpStatus.CREATED,
       });
     } catch (err) {
+      console.log(err);
       return res.status(HttpStatus.BAD_REQUEST).json({
-        message: 'Error: Driver not registration!',
+        message: 'Error: Driver not registred!',
         status: HttpStatus.BAD_REQUEST,
       });
     }

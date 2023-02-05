@@ -28,14 +28,16 @@ export class UsersController {
   @Post()
   public async create(@Res() res, @Body() userDto: UserDto): Promise<any> {
     try {
-      await this.usersService.register(userDto);
+      await this.usersService.registerPassenger(userDto);
+
       return res.status(HttpStatus.CREATED).json({
-        message: 'Driver registration successfully!',
+        userDto,
+        message: 'Passenger registration successfully!',
         status: HttpStatus.CREATED,
       });
     } catch (err) {
       return res.status(HttpStatus.BAD_REQUEST).json({
-        message: 'Error: Driver not registration!',
+        message: 'Error: Passenger not registred!',
         status: HttpStatus.BAD_REQUEST,
       });
     }

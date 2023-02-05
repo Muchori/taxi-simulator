@@ -51,7 +51,7 @@ export class UsersService {
     return user;
   }
 
-  public async create(userDto: UserDto): Promise<IUsers> {
+  public async createPassenger(userDto: UserDto): Promise<IUsers> {
     try {
       return await this.userRepository.save(userDto);
     } catch (err) {
@@ -59,10 +59,10 @@ export class UsersService {
     }
   }
 
-  public async register(userDto: UserDto): Promise<IUsers> {
+  public async registerPassenger(userDto: UserDto): Promise<IUsers> {
     userDto.password = await this.hashingService.hash(userDto.password);
 
-    return this.create(userDto);
+    return await this.createPassenger(userDto);
   }
 
   public async updateByEmail(email: string): Promise<Users> {

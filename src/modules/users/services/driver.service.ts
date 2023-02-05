@@ -11,13 +11,14 @@ import { UserProfileDto } from '../dto/user-profile.dto';
 import { UserUpdateDto } from '../dto/user-update.dto';
 import { IUsers } from '../interfaces/users.interface';
 import { DriverDto } from '../dto/create-driver.dto';
+import { HashingService } from 'src/shared/hashing.service';
 
 @Injectable()
 export class DriverService {
-  hashingService: any;
   constructor(
     @InjectRepository(Driver)
     private readonly driverRepository: Repository<Driver>,
+    private readonly hashingService: HashingService,
   ) { }
 
   public async findAll(): Promise<Driver[]> {
@@ -50,7 +51,7 @@ export class DriverService {
     return user;
   }
 
-  public async create(driverDto: DriverDto): Promise<IUsers> {
+  public async createDriver(driverDto: DriverDto): Promise<IUsers> {
     try {
       return await this.driverRepository.save(driverDto);
     } catch (err) {
@@ -58,10 +59,10 @@ export class DriverService {
     }
   }
 
-  public async register(driverDto: DriverDto): Promise<IUsers> {
+  public async registerDriver(driverDto: DriverDto): Promise<IUsers> {
     driverDto.password = await this.hashingService.hash(driverDto.password);
 
-    return this.create(driverDto);
+    return await this.createDriver(driverDto);
   }
 
   public async updateByEmail(email: string): Promise<Driver> {

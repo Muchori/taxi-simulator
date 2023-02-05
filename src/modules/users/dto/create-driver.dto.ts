@@ -1,6 +1,13 @@
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
 export class DriverDto {
   @ApiProperty({ example: 'test1@example.com' })
@@ -10,19 +17,23 @@ export class DriverDto {
   @IsEmail()
   email: string;
 
-  @ApiProperty()
-  @MinLength(6)
-  password?: string;
-
   @ApiProperty({ example: 'John Doe' })
   @IsNotEmpty()
+  @IsString()
   name: string;
 
   @ApiProperty({ example: '0700000000' })
   @IsNotEmpty()
+  @IsString()
   phoneNumber: string;
 
   @ApiProperty({ example: true })
+  @IsOptional()
   @IsNotEmpty()
+  @IsBoolean()
   suspended?: boolean;
+
+  @ApiProperty()
+  @MinLength(6)
+  password?: string;
 }
