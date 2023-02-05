@@ -31,11 +31,11 @@ export class RideController {
   @HttpCode(HttpStatus.OK)
   async createRide(
     @Body() createRideDto: CreateRideDto,
-    @Query('passenger_id') passenger_id: string,
-    @Query('driver_id') driver_id: string,
+    @Param('passengerId') passengerId: string,
+    @Param('driverId') driverId: string,
   ): Promise<Ride> {
-    createRideDto.driverId = driver_id;
-    createRideDto.passengerId = passenger_id;
+    createRideDto.driverId = driverId;
+    createRideDto.passengerId = passengerId;
 
     const ride = await this.rideService.createRide(createRideDto);
 
