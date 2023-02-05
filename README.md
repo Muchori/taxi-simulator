@@ -65,6 +65,8 @@ docker compose logs
 
 ## Comfortable development
 
+I would recommend this for better experience
+
 ```bash
 git clone --depth 1 git@github.com:Muchori/taxi-simulator.git
 cd taxi-simulator/
