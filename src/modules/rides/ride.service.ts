@@ -72,10 +72,7 @@ export class RideService {
     });
   }
 
-  findManyWithPagination(paginationOptions: IPaginationOptions) {
-    return this.rideRepository.find({
-      skip: (paginationOptions.page - 1) * paginationOptions.limit,
-      take: paginationOptions.limit,
-    });
+  public async findAll(): Promise<Ride[]> {
+    return await this.rideRepository.find();
   }
 }

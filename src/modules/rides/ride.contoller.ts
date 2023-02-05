@@ -54,25 +54,9 @@ export class RideController {
     return await this.rideService.stop(rideId);
   }
 
-  @SerializeOptions({
-    groups: ['admin'],
-  })
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-  ) {
-    if (limit > 50) {
-      limit = 50;
-    }
-
-    return infinityPagination(
-      await this.rideService.findManyWithPagination({
-        page,
-        limit,
-      }),
-      { page, limit },
-    );
+  async findAll(): Promise<Ride[]> {
+    return await this.rideService.findAll();
   }
 }

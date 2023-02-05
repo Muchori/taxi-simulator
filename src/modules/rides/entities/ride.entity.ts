@@ -12,8 +12,8 @@ import {
 } from 'typeorm';
 import { RideStatus } from '../status';
 
-@Entity('Ride')
-export class Ride extends EntityHelper {
+@Entity()
+export class Ride {
   @PrimaryGeneratedColumn('uuid')
   rideId: string;
 

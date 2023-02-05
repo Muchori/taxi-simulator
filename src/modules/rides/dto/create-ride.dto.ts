@@ -16,10 +16,10 @@ export class LocationDto {
 }
 
 export class CreateRideDto {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ example: 'c9de1398-fb03-43c5-9b54-526b61d429f7' })
   passengerId: string;
 
-  @ApiProperty({ example: 3 })
+  @ApiProperty({ example: 'c9de1398-fb03-43c5-9b54-526b61d429f7' })
   driverId: string;
 
   // @ApiProperty({ type: () => RideStatus })
