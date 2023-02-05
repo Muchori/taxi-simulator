@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from 'src/modules/users/entities/user.entity';
 import { Repository } from 'typeorm';
+import { genSalt, hash } from 'bcrypt';
 
 @Injectable()
 export class UserSeedService {
@@ -10,16 +11,26 @@ export class UserSeedService {
     private repository: Repository<Users>,
   ) { }
 
+  async hash(data: string | Buffer): Promise<string> {
+    const salt = await genSalt();
+    return hash(data, salt);
+  }
+
   async run() {
-    const admin = await this.repository.create({
-      name: 'Super Admin',
-      email: 'admin@admin.com',
-      password: 'secret',
-      phoneNumber: '0701234567',
-    });
+    const pass = 'secret';
+
+    const hash = await this.hash(pass);
+    const admin = await this.repository.save(
+      this.repository.create({
+        name: 'Super Admin',
+        email: 'admin@gmail.com',
+        password: hash,
+        phoneNumber: '0701234567',
+      }),
+    );
 
     const adminExists = await this.repository.findOne({
-      where: { email: 'admin@admin.com' },
+      where: { email: 'admin@gmail.com' },
     });
 
     if (!adminExists) {
