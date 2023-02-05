@@ -13,12 +13,9 @@ export class UserSeedService {
   async run() {
     const admin = await this.repository.create({
       name: 'Super Admin',
-      password: 'secret',
       email: 'admin@admin.com',
-      // name: 'Super Admin',
-      // email: 'admin@admin.com',
-      // phoneNumber: '070123456789',
-      // password: 'secret',
+      password: 'secret',
+      phoneNumber: '0701234567',
     });
 
     const adminExists = await this.repository.findOne({

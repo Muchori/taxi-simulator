@@ -40,7 +40,9 @@ export class DriverService {
   }
 
   public async findById(userId: string): Promise<Driver> {
-    const user = await this.driverRepository.findOneBy(userId);
+    const user = await this.driverRepository.findOneBy({
+      id: userId,
+    });
 
     if (!user) {
       throw new NotFoundException(`User #${userId} not found`);
@@ -57,7 +59,7 @@ export class DriverService {
     }
   }
 
-  public async updateByEmail(email: string): Promise<Users> {
+  public async updateByEmail(email: string): Promise<Driver> {
     try {
       const driver = await this.driverRepository.findOneBy({ email: email });
       driver.password = await this.hashingService.hash(

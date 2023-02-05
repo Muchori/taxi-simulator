@@ -7,7 +7,6 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BcryptService } from 'src/shared/bcrypt.service';
 import { HashingService } from 'src/shared/hashing.service';
-import { JwtStrategy } from '../auth/strategies/jwt.strategy';
 import { Users } from '../users/entities/user.entity';
 import { UsersService } from '../users/services/users.service';
 
@@ -34,7 +33,6 @@ import { UsersService } from '../users/services/users.service';
     },
     LoginService,
     UsersService,
-    JwtStrategy,
   ],
   controllers: [LoginController],
 })

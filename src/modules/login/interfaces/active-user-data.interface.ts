@@ -18,5 +18,5 @@ export interface ActiveUserData {
   /**
    * The subject's (user) name.
    */
-  phoneNumber: number;
+  phoneNumber: string;
 }

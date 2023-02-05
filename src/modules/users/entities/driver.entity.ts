@@ -13,7 +13,7 @@ export class Driver {
   @Column({
     unique: true,
   })
-  phoneNumber: number;
+  phoneNumber: string;
 
   @Column({
     unique: true,
