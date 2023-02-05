@@ -36,6 +36,7 @@ export class UsersController {
         status: HttpStatus.CREATED,
       });
     } catch (err) {
+      console.log(err);
       return res.status(HttpStatus.BAD_REQUEST).json({
         message: 'Error: Passenger not registred!',
         status: HttpStatus.BAD_REQUEST,

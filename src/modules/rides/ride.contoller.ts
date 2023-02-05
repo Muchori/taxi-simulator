@@ -3,20 +3,15 @@ import { CreateRideDto } from './dto/create-ride.dto';
 import {
   Body,
   Controller,
-  DefaultValuePipe,
   Get,
   HttpCode,
   HttpStatus,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
-  Query,
-  SerializeOptions,
 } from '@nestjs/common';
 import { RideService } from './ride.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { infinityPagination } from 'src/utils/infinity-pagination';
 
 @ApiBearerAuth()
 @ApiTags('Ride')

@@ -7,7 +7,6 @@ import { Repository } from 'typeorm';
 import { Ride } from './entities/ride.entity';
 import { Point } from 'geojson';
 import { RideStatus } from './status';
-import { IPaginationOptions } from 'src/utils/types/pagination-options';
 
 @Injectable()
 export class RideService {
