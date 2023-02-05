@@ -63,10 +63,6 @@ export class LoginService {
     const accessToken = await this.jwtService.signAsync(payload);
 
     return {
-      // sub: payload.id,
-      // expiresIn: this.configService.get('JWT_ACCESS_TOKEN_TTL'),
-      // audience: this.configService.get('JWT_TOKEN_AUDIENCE'),
-      // issuer: this.configService.get('JWT_TOKEN_ISSUER'),
       accessToken: accessToken,
       user: payload,
       status: HttpStatus.OK,

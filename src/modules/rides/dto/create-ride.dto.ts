@@ -1,10 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { IsNotEmpty, Validate, ValidateNested } from 'class-validator';
+import { IsNotEmpty, ValidateNested } from 'class-validator';
 import { toNumber } from 'lodash';
-import { Status } from 'src/modules/statuses/entities/status.entity';
-import { IsExist } from 'src/utils/validators/is-exists.validator';
-import { RideStatus } from '../status';
 
 export class LocationDto {
   @ApiProperty({ type: () => Number })

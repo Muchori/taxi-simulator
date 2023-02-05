@@ -24,7 +24,7 @@ export class Driver {
   password: string;
 
   @Column({ type: 'boolean', default: false, nullable: false })
-  suspended: boolean;
+  suspended?: boolean;
 
   @OneToOne(() => Ride, (ride) => ride.driver, { onDelete: 'CASCADE' })
   ride: Ride;

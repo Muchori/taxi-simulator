@@ -1,3 +1,4 @@
+import { DriverUpdateDto } from './../dto/driver-update.dto';
 import {
   Body,
   Controller,
@@ -16,6 +17,7 @@ import { UserProfileDto } from '../dto/user-profile.dto';
 import { UserUpdateDto } from '../dto/user-update.dto';
 import { IUsers } from '../interfaces/users.interface';
 import { DriverService } from '../services/driver.service';
+import { DriverDto } from '../dto/create-driver.dto';
 
 @ApiBearerAuth()
 @ApiTags('Drivers')
@@ -26,22 +28,39 @@ import { DriverService } from '../services/driver.service';
 export class DriverController {
   constructor(private readonly driverService: DriverService) { }
 
+  @Post()
+  public async create(@Res() res, @Body() driverDto: DriverDto): Promise<any> {
+    try {
+      await this.driverService.register(driverDto);
+
+      return res.status(HttpStatus.CREATED).json({
+        message: 'Driver registration successfully!',
+        status: HttpStatus.CREATED,
+      });
+    } catch (err) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Error: Driver not registration!',
+        status: HttpStatus.BAD_REQUEST,
+      });
+    }
+  }
+
   @Get()
   public async findAllUser(): Promise<IUsers[]> {
     return this.driverService.findAll();
   }
 
-  @Get('/:userId')
+  @Get('/:driverId')
   public async findOneUser(@Param('userId') userId: string): Promise<IUsers> {
     return this.driverService.findById(userId);
   }
 
-  @Get('/:userId/profile')
+  @Get('/:driverId/profile')
   public async getUser(
     @Res() res,
-    @Param('userId') userId: string,
+    @Param('driverId') driverId: string,
   ): Promise<IUsers> {
-    const user = await this.driverService.findById(userId);
+    const user = await this.driverService.findById(driverId);
 
     if (!user) {
       throw new NotFoundException('User does not exist!');
@@ -53,14 +72,14 @@ export class DriverController {
     });
   }
 
-  @Put('/:userId/profile')
+  @Put('/:driverId/profile')
   public async updateProfileUser(
     @Res() res,
-    @Param('userId') userId: string,
+    @Param('driverId') driverId: string,
     @Body() userProfileDto: UserProfileDto,
   ): Promise<any> {
     try {
-      await this.driverService.updateProfileDriver(userId, userProfileDto);
+      await this.driverService.updateProfileDriver(driverId, userProfileDto);
 
       return res.status(HttpStatus.OK).json({
         message: 'User Updated successfully!',
@@ -74,14 +93,14 @@ export class DriverController {
     }
   }
 
-  @Put('/:userId')
+  @Put('/:driverId')
   public async updateUser(
     @Res() res,
-    @Param('userId') userId: string,
-    @Body() userUpdateDto: UserUpdateDto,
+    @Param('driverId') driverId: string,
+    @Body() driverUpdateDto: DriverUpdateDto,
   ) {
     try {
-      await this.driverService.updateDriver(userId, userUpdateDto);
+      await this.driverService.updateDriver(driverId, driverUpdateDto);
 
       return res.status(HttpStatus.OK).json({
         message: 'User Updated successfully!',
@@ -95,9 +114,9 @@ export class DriverController {
     }
   }
 
-  @Delete('/:userId')
-  public async deleteUser(@Param('userId') userId: string): Promise<void> {
-    const user = this.driverService.deleteDriver(userId);
+  @Delete('/:driverId')
+  public async deleteUser(@Param('driverId') driverId: string): Promise<void> {
+    const user = this.driverService.deleteDriver(driverId);
     if (!user) {
       throw new NotFoundException('User does not exist!');
     }
@@ -105,7 +124,7 @@ export class DriverController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post(':id/suspend')
+  @Post(':driverId/suspend')
   async suspend(@Param('id') driver_id: string): Promise<string> {
     await this.driverService.suspend(driver_id);
 
@@ -113,7 +132,7 @@ export class DriverController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post(':id/remove-suspend')
+  @Post(':driverId/remove-suspend')
   async removeSuspend(@Param('id') driver_id: string): Promise<string> {
     await this.driverService.removeSuspend(driver_id);
 

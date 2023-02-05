@@ -67,11 +67,6 @@ export class RideService {
   }
 
   async stop(rideId: string) {
-    // const ride = await this.rideRepository.findOne({
-    //   where: { rideId },
-    // });
-    // ride.status = updateRideStatusDto.status;
-    // return await this.rideRepository.save(ride);
     return await this.rideRepository.update(rideId, {
       status: RideStatus.done,
     });

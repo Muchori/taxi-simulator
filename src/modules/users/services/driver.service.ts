@@ -6,12 +6,11 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
-import { UserDto } from '../dto/create-user.dto';
 import { Driver } from '../entities/driver.entity';
 import { UserProfileDto } from '../dto/user-profile.dto';
 import { UserUpdateDto } from '../dto/user-update.dto';
-import { Users } from '../entities/user.entity';
 import { IUsers } from '../interfaces/users.interface';
+import { DriverDto } from '../dto/create-driver.dto';
 
 @Injectable()
 export class DriverService {
@@ -25,7 +24,7 @@ export class DriverService {
     return await this.driverRepository.find();
   }
 
-  public async findByEmail(email: string): Promise<Users> {
+  public async findByEmail(email: string): Promise<Driver> {
     const driver = await this.driverRepository.findOne({
       where: {
         email: email,
@@ -51,12 +50,18 @@ export class DriverService {
     return user;
   }
 
-  public async create(userDto: UserDto): Promise<IUsers> {
+  public async create(driverDto: DriverDto): Promise<IUsers> {
     try {
-      return await this.driverRepository.save(userDto);
+      return await this.driverRepository.save(driverDto);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  public async register(driverDto: DriverDto): Promise<IUsers> {
+    driverDto.password = await this.hashingService.hash(driverDto.password);
+
+    return this.create(driverDto);
   }
 
   public async updateByEmail(email: string): Promise<Driver> {
@@ -75,7 +80,7 @@ export class DriverService {
   public async updateByPassword(
     email: string,
     password: string,
-  ): Promise<Users> {
+  ): Promise<Driver> {
     try {
       const driver = await this.driverRepository.findOneBy({ email: email });
       driver.password = await this.hashingService.hash(password);

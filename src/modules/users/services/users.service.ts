@@ -59,6 +59,12 @@ export class UsersService {
     }
   }
 
+  public async register(userDto: UserDto): Promise<IUsers> {
+    userDto.password = await this.hashingService.hash(userDto.password);
+
+    return this.create(userDto);
+  }
+
   public async updateByEmail(email: string): Promise<Users> {
     try {
       const user = await this.userRepository.findOneBy({ email: email });

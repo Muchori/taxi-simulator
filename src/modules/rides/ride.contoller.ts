@@ -13,19 +13,12 @@ import {
   Post,
   Query,
   SerializeOptions,
-  UseGuards,
 } from '@nestjs/common';
 import { RideService } from './ride.service';
-import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from '../roles/roles.decorator';
-import { RoleEnum } from '../roles/roles.enum';
-import { RolesGuard } from '../roles/roles.guard';
 import { infinityPagination } from 'src/utils/infinity-pagination';
 
 @ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'), RolesGuard)
-@Roles(RoleEnum.admin)
 @ApiTags('Ride')
 @Controller({
   path: 'ride',
@@ -34,7 +27,7 @@ import { infinityPagination } from 'src/utils/infinity-pagination';
 export class RideController {
   constructor(private readonly rideService: RideService) { }
 
-  @Post(':id/:id')
+  @Post(':passengerId/:driverId')
   @HttpCode(HttpStatus.OK)
   async createRide(
     @Body() createRideDto: CreateRideDto,

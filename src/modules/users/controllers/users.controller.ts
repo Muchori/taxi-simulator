@@ -5,38 +5,60 @@ import {
   Body,
   Res,
   Param,
-  UseGuards,
   HttpStatus,
   NotFoundException,
   Delete,
+  Post,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { UserDto } from '../dto/create-user.dto';
 import { UserProfileDto } from '../dto/user-profile.dto';
 import { UserUpdateDto } from '../dto/user-update.dto';
 import { IUsers } from '../interfaces/users.interface';
 import { UsersService } from '../services/users.service';
-@ApiTags('users')
-@Controller('users')
+@ApiBearerAuth()
+@ApiTags('Passengers')
+@Controller({
+  path: 'passenger',
+  version: '1',
+})
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
+
+  @Post()
+  public async create(@Res() res, @Body() userDto: UserDto): Promise<any> {
+    try {
+      await this.usersService.register(userDto);
+      return res.status(HttpStatus.CREATED).json({
+        message: 'Driver registration successfully!',
+        status: HttpStatus.CREATED,
+      });
+    } catch (err) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Error: Driver not registration!',
+        status: HttpStatus.BAD_REQUEST,
+      });
+    }
+  }
 
   @Get()
   public async findAllUser(): Promise<IUsers[]> {
     return this.usersService.findAll();
   }
 
-  @Get('/:userId')
-  public async findOneUser(@Param('userId') userId: string): Promise<IUsers> {
-    return this.usersService.findById(userId);
+  @Get('/:passengerId')
+  public async findOneUser(
+    @Param('passengerId') passengerId: string,
+  ): Promise<IUsers> {
+    return this.usersService.findById(passengerId);
   }
 
-  @Get('/:userId/profile')
+  @Get('/:passengerId/profile')
   public async getUser(
     @Res() res,
-    @Param('userId') userId: string,
+    @Param('passengerId') passengerId: string,
   ): Promise<IUsers> {
-    const user = await this.usersService.findById(userId);
+    const user = await this.usersService.findById(passengerId);
 
     if (!user) {
       throw new NotFoundException('User does not exist!');
@@ -48,14 +70,14 @@ export class UsersController {
     });
   }
 
-  @Put('/:userId/profile')
+  @Put('/:passengerId/profile')
   public async updateProfileUser(
     @Res() res,
-    @Param('userId') userId: string,
+    @Param('passengerId') passengerId: string,
     @Body() userProfileDto: UserProfileDto,
   ): Promise<any> {
     try {
-      await this.usersService.updateProfileUser(userId, userProfileDto);
+      await this.usersService.updateProfileUser(passengerId, userProfileDto);
 
       return res.status(HttpStatus.OK).json({
         message: 'User Updated successfully!',
@@ -69,14 +91,14 @@ export class UsersController {
     }
   }
 
-  @Put('/:userId')
+  @Put('/:passengerId')
   public async updateUser(
     @Res() res,
-    @Param('userId') userId: string,
+    @Param('passengerId') passengerId: string,
     @Body() userUpdateDto: UserUpdateDto,
   ) {
     try {
-      await this.usersService.updateUser(userId, userUpdateDto);
+      await this.usersService.updateUser(passengerId, userUpdateDto);
 
       return res.status(HttpStatus.OK).json({
         message: 'User Updated successfully!',
@@ -90,9 +112,11 @@ export class UsersController {
     }
   }
 
-  @Delete('/:userId')
-  public async deleteUser(@Param('userId') userId: string): Promise<void> {
-    const user = this.usersService.deleteUser(userId);
+  @Delete('/:passengerId')
+  public async deleteUser(
+    @Param('passengerId') passengerId: string,
+  ): Promise<void> {
+    const user = this.usersService.deleteUser(passengerId);
     if (!user) {
       throw new NotFoundException('User does not exist!');
     }
