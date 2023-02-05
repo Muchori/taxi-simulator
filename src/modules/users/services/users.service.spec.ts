@@ -113,23 +113,6 @@ describe('UsersService', () => {
     });
   });
 
-  describe('findByEmail() method', () => {
-    it('should find a user by email', async () => {
-      expect(await service.findByEmail('test@example.com')).toEqual(oneUser);
-    });
-
-    it('should throw an exception if it not found a user by email', async () => {
-      jest
-        .spyOn(service, 'findByEmail')
-        .mockRejectedValueOnce(
-          new NotFoundException('User test@example.com not found'),
-        );
-      await expect(service.findByEmail('test@example.com')).rejects.toThrow(
-        new NotFoundException('User test@example.com not found'),
-      );
-    });
-  });
-
   describe('findById() method', () => {
     it('should find a user by id', async () => {
       expect(await service.findById('anyid')).toEqual(oneUser);
@@ -183,61 +166,6 @@ describe('UsersService', () => {
           new HttpException('err', HttpStatus.BAD_REQUEST),
         );
       await expect(service.updateByEmail('test@example.com')).rejects.toThrow(
-        new HttpException('err', HttpStatus.BAD_REQUEST),
-      );
-    });
-  });
-
-  describe('updateByPassword() method', () => {
-    it('should update a user by password', async () => {
-      expect(
-        await service.updateByPassword('test@example.com', 'pass123'),
-      ).toEqual(updateUserByPassword);
-    });
-
-    it('should throw an exception if it not update a user by password', async () => {
-      jest
-        .spyOn(service, 'updateByPassword')
-        .mockRejectedValueOnce(
-          new HttpException('err', HttpStatus.BAD_REQUEST),
-        );
-      await expect(
-        service.updateByPassword('test@example.com', 'pass123'),
-      ).rejects.toThrow(new HttpException('err', HttpStatus.BAD_REQUEST));
-    });
-  });
-
-  describe('updateProfileUser() method', () => {
-    it('should update profile of a user by id', async () => {
-      expect(
-        await service.updateProfileUser('anyid', updateProfileUser),
-      ).toEqual(updateProfileUser);
-    });
-
-    it('should throw an exception if it not update a profile user', async () => {
-      jest
-        .spyOn(service, 'updateProfileUser')
-        .mockRejectedValueOnce(
-          new HttpException('err', HttpStatus.BAD_REQUEST),
-        );
-      await expect(
-        service.updateProfileUser('anyid', updateProfileUser),
-      ).rejects.toThrow(new HttpException('err', HttpStatus.BAD_REQUEST));
-    });
-  });
-
-  describe('updateUser() method', () => {
-    it('should update a user by id', async () => {
-      expect(await service.updateUser('anyid', updateUser)).toEqual(updateUser);
-    });
-
-    it('should throw an exception if it not update a user', async () => {
-      jest
-        .spyOn(service, 'updateUser')
-        .mockRejectedValueOnce(
-          new HttpException('err', HttpStatus.BAD_REQUEST),
-        );
-      await expect(service.updateUser('anyid', updateUser)).rejects.toThrow(
         new HttpException('err', HttpStatus.BAD_REQUEST),
       );
     });

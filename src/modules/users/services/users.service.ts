@@ -4,12 +4,10 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HashingService } from 'src/shared/hashing.service';
 import { UserDto } from '../dto/create-user.dto';
-import { UserProfileDto } from '../dto/user-profile.dto';
-import { UserUpdateDto } from '../dto/user-update.dto';
 import { IUsers } from '../interfaces/users.interface';
 import { Users } from '../entities/user.entity';
 
@@ -63,66 +61,6 @@ export class UsersService {
     userDto.password = await this.hashingService.hash(userDto.password);
 
     return await this.createPassenger(userDto);
-  }
-
-  public async updateByEmail(email: string): Promise<Users> {
-    try {
-      const user = await this.userRepository.findOneBy({ email: email });
-      user.password = await this.hashingService.hash(
-        Math.random().toString(36).slice(-8),
-      );
-
-      return await this.userRepository.save(user);
-    } catch (err) {
-      throw new HttpException(err, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  public async updateByPassword(
-    email: string,
-    password: string,
-  ): Promise<Users> {
-    try {
-      const user = await this.userRepository.findOneBy({ email: email });
-      user.password = await this.hashingService.hash(password);
-
-      return await this.userRepository.save(user);
-    } catch (err) {
-      throw new HttpException(err, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  public async updateProfileUser(
-    id: string,
-    userProfileDto: UserProfileDto,
-  ): Promise<Users> {
-    try {
-      const user = await this.userRepository.findOneBy({ id });
-      user.name = userProfileDto.name;
-      user.email = userProfileDto.email;
-      user.phoneNumber = userProfileDto.phoneNumber;
-
-      return await this.userRepository.save(user);
-    } catch (err) {
-      throw new HttpException(err, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  public async updateUser(
-    id: string,
-    userUpdateDto: UserUpdateDto,
-  ): Promise<UpdateResult> {
-    try {
-      const user = await this.userRepository.update(id, { ...userUpdateDto });
-
-      if (!user) {
-        throw new NotFoundException(`User #${id} does not exist`);
-      }
-
-      return user;
-    } catch (err) {
-      throw new HttpException(err, HttpStatus.BAD_REQUEST);
-    }
   }
 
   public async deleteUser(id: string): Promise<void> {

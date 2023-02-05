@@ -1,3 +1,5 @@
+import { Driver } from './../users/entities/driver.entity';
+import { DriverService } from './../users/services/driver.service';
 import { Module } from '@nestjs/common';
 import { LoginService } from './login.service';
 import { LoginController } from './login.controller';
@@ -13,7 +15,7 @@ import { UsersService } from '../users/services/users.service';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forFeature([Users]),
+    TypeOrmModule.forFeature([Users, Driver]),
     PassportModule.register({ defaultStrategy: 'jwt', session: false }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -33,6 +35,7 @@ import { UsersService } from '../users/services/users.service';
     },
     LoginService,
     UsersService,
+    DriverService,
   ],
   controllers: [LoginController],
 })

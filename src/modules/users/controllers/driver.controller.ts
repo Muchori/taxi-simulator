@@ -1,4 +1,3 @@
-import { DriverUpdateDto } from './../dto/driver-update.dto';
 import {
   Body,
   Controller,
@@ -9,15 +8,12 @@ import {
   NotFoundException,
   Param,
   Post,
-  Put,
   Res,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { UserProfileDto } from '../dto/user-profile.dto';
 import { IUsers } from '../interfaces/users.interface';
 import { DriverService } from '../services/driver.service';
 import { DriverDto } from '../dto/create-driver.dto';
-import { log } from 'console';
 
 @ApiBearerAuth()
 @ApiTags('Drivers')
@@ -72,48 +68,6 @@ export class DriverController {
       user: user,
       status: HttpStatus.OK,
     });
-  }
-
-  @Put('/:driverId/profile')
-  public async updateProfileUser(
-    @Res() res,
-    @Param('driverId') driverId: string,
-    @Body() userProfileDto: UserProfileDto,
-  ): Promise<any> {
-    try {
-      await this.driverService.updateProfileDriver(driverId, userProfileDto);
-
-      return res.status(HttpStatus.OK).json({
-        message: 'User Updated successfully!',
-        status: HttpStatus.OK,
-      });
-    } catch (err) {
-      return res.status(HttpStatus.BAD_REQUEST).json({
-        message: 'Error: User not updated!',
-        status: HttpStatus.BAD_REQUEST,
-      });
-    }
-  }
-
-  @Put('/:driverId')
-  public async updateUser(
-    @Res() res,
-    @Param('driverId') driverId: string,
-    @Body() driverUpdateDto: DriverUpdateDto,
-  ) {
-    try {
-      await this.driverService.updateDriver(driverId, driverUpdateDto);
-
-      return res.status(HttpStatus.OK).json({
-        message: 'User Updated successfully!',
-        status: 200,
-      });
-    } catch (err) {
-      return res.status(HttpStatus.BAD_REQUEST).json({
-        message: 'Error: User not updated!',
-        status: 400,
-      });
-    }
   }
 
   @Delete('/:driverId')

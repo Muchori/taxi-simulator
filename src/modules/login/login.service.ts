@@ -1,3 +1,4 @@
+import { DriverService } from './../users/services/driver.service';
 import {
   HttpException,
   HttpStatus,
@@ -17,13 +18,17 @@ import { UsersService } from '../users/services/users.service';
 export class LoginService {
   constructor(
     private readonly usersService: UsersService,
+    private readonly driverService: DriverService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly hashingService: HashingService,
   ) { }
 
   private async findUserByEmail(loginDto: LoginDto): Promise<IUsers> {
-    return await this.usersService.findByEmail(loginDto.email);
+    return (
+      (await this.usersService.findByEmail(loginDto.email)) ||
+      (await this.driverService.findByEmail(loginDto.email))
+    );
   }
 
   public async login(

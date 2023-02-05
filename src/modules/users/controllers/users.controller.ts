@@ -1,6 +1,5 @@
 import {
   Controller,
-  Put,
   Get,
   Body,
   Res,
@@ -12,8 +11,6 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserDto } from '../dto/create-user.dto';
-import { UserProfileDto } from '../dto/user-profile.dto';
-import { UserUpdateDto } from '../dto/user-update.dto';
 import { IUsers } from '../interfaces/users.interface';
 import { UsersService } from '../services/users.service';
 @ApiBearerAuth()
@@ -71,48 +68,6 @@ export class UsersController {
       user: user,
       status: HttpStatus.OK,
     });
-  }
-
-  @Put('/:passengerId/profile')
-  public async updateProfileUser(
-    @Res() res,
-    @Param('passengerId') passengerId: string,
-    @Body() userProfileDto: UserProfileDto,
-  ): Promise<any> {
-    try {
-      await this.usersService.updateProfileUser(passengerId, userProfileDto);
-
-      return res.status(HttpStatus.OK).json({
-        message: 'User Updated successfully!',
-        status: HttpStatus.OK,
-      });
-    } catch (err) {
-      return res.status(HttpStatus.BAD_REQUEST).json({
-        message: 'Error: User not updated!',
-        status: HttpStatus.BAD_REQUEST,
-      });
-    }
-  }
-
-  @Put('/:passengerId')
-  public async updateUser(
-    @Res() res,
-    @Param('passengerId') passengerId: string,
-    @Body() userUpdateDto: UserUpdateDto,
-  ) {
-    try {
-      await this.usersService.updateUser(passengerId, userUpdateDto);
-
-      return res.status(HttpStatus.OK).json({
-        message: 'User Updated successfully!',
-        status: 200,
-      });
-    } catch (err) {
-      return res.status(HttpStatus.BAD_REQUEST).json({
-        message: 'Error: User not updated!',
-        status: 400,
-      });
-    }
   }
 
   @Delete('/:passengerId')
