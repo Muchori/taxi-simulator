@@ -24,9 +24,9 @@ import { UsersModule } from './modules/users/users.module';
         return dataSource;
       },
     }),
-    UsersModule,
-    AuthModule,
+    //UsersModule,
+    //AuthModule,
     RideModule,
   ],
 })
-export class AppModule {}
+export class AppModule { }

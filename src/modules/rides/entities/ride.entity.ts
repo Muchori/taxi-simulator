@@ -1,6 +1,6 @@
 import { Driver } from './../../users/entities/driver.entity';
 import { Point } from 'geojson';
-import { User } from 'src/modules/users/entities/user.entity';
+import { Users } from 'src/modules/users/entities/user.entity';
 import { EntityHelper } from 'src/utils/entity-helper';
 import {
   Column,
@@ -47,7 +47,7 @@ export class Ride extends EntityHelper {
   @JoinColumn({ name: 'driver_id' })
   driver: Driver;
 
-  @OneToOne(() => User, (user) => user.ride, { onDelete: 'CASCADE' })
+  @OneToOne(() => Users, (user) => user.ride, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'passenger_id' })
-  user: User;
+  user: Users;
 }

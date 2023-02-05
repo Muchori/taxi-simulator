@@ -1,113 +1,122 @@
 import {
   Body,
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
-  ParseIntPipe,
-  Patch,
   Post,
-  Query,
-  SerializeOptions,
-  UseGuards,
+  Put,
+  Res,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { infinityPagination } from 'src/utils/infinity-pagination';
-import { Roles } from '../../roles/roles.decorator';
-import { RoleEnum } from '../../roles/roles.enum';
-import { RolesGuard } from '../../roles/roles.guard';
+import { UserProfileDto } from '../dto/user-profile.dto';
+import { UserUpdateDto } from '../dto/user-update.dto';
+import { IUsers } from '../interfaces/users.interface';
 import { DriverService } from '../services/driver.service';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
 
 @ApiBearerAuth()
-@Roles(RoleEnum.admin)
-@UseGuards(AuthGuard('jwt'), RolesGuard)
 @ApiTags('Drivers')
 @Controller({
   path: 'driver',
   version: '1',
 })
 export class DriverController {
-  constructor(private readonly driverService: DriverService) {}
+  constructor(private readonly driverService: DriverService) { }
 
-  @SerializeOptions({
-    groups: ['admin'],
-  })
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  create(@Body() createProfileDto: CreateUserDto) {
-    return this.driverService.create(createProfileDto);
+  @Get()
+  public async findAllUser(): Promise<IUsers[]> {
+    return this.driverService.findAll();
   }
 
-  @SerializeOptions({
-    groups: ['admin'],
-  })
-  @Get()
-  @HttpCode(HttpStatus.OK)
-  async findAll(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-  ) {
-    if (limit > 50) {
-      limit = 50;
+  @Get('/:userId')
+  public async findOneUser(@Param('userId') userId: string): Promise<IUsers> {
+    return this.driverService.findById(userId);
+  }
+
+  @Get('/:userId/profile')
+  public async getUser(
+    @Res() res,
+    @Param('userId') userId: string,
+  ): Promise<IUsers> {
+    const user = await this.driverService.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException('User does not exist!');
     }
 
-    return infinityPagination(
-      await this.driverService.findManyWithPagination({
-        page,
-        limit,
-      }),
-      { page, limit },
-    );
+    return res.status(HttpStatus.OK).json({
+      user: user,
+      status: HttpStatus.OK,
+    });
   }
 
-  @SerializeOptions({
-    groups: ['admin'],
-  })
-  @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  findOne(@Param('id') driver_id: string) {
-    return this.driverService.findOne({ driver_id: +driver_id });
+  @Put('/:userId/profile')
+  public async updateProfileUser(
+    @Res() res,
+    @Param('userId') userId: string,
+    @Body() userProfileDto: UserProfileDto,
+  ): Promise<any> {
+    try {
+      await this.driverService.updateProfileDriver(userId, userProfileDto);
+
+      return res.status(HttpStatus.OK).json({
+        message: 'User Updated successfully!',
+        status: HttpStatus.OK,
+      });
+    } catch (err) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Error: User not updated!',
+        status: HttpStatus.BAD_REQUEST,
+      });
+    }
   }
 
-  @SerializeOptions({
-    groups: ['admin'],
-  })
-  @Patch(':id')
-  @HttpCode(HttpStatus.OK)
-  update(@Param('id') id: number, @Body() updateProfileDto: UpdateUserDto) {
-    return this.driverService.update(id, updateProfileDto);
+  @Put('/:userId')
+  public async updateUser(
+    @Res() res,
+    @Param('userId') userId: string,
+    @Body() userUpdateDto: UserUpdateDto,
+  ) {
+    try {
+      await this.driverService.updateDriver(userId, userUpdateDto);
+
+      return res.status(HttpStatus.OK).json({
+        message: 'User Updated successfully!',
+        status: 200,
+      });
+    } catch (err) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Error: User not updated!',
+        status: 400,
+      });
+    }
   }
 
-  @SerializeOptions({
-    groups: ['admin'],
-  })
+  @Delete('/:userId')
+  public async deleteUser(@Param('userId') userId: string): Promise<void> {
+    const user = this.driverService.deleteDriver(userId);
+    if (!user) {
+      throw new NotFoundException('User does not exist!');
+    }
+    return user;
+  }
+
   @HttpCode(HttpStatus.OK)
   @Post(':id/suspend')
-  async suspend(@Param('id') driver_id: number): Promise<string> {
+  async suspend(@Param('id') driver_id: string): Promise<string> {
     await this.driverService.suspend(driver_id);
 
     return 'success';
   }
 
-  @SerializeOptions({
-    groups: ['admin'],
-  })
   @HttpCode(HttpStatus.OK)
   @Post(':id/remove-suspend')
-  async removeSuspend(@Param('id') driver_id: number): Promise<string> {
+  async removeSuspend(@Param('id') driver_id: string): Promise<string> {
     await this.driverService.removeSuspend(driver_id);
 
     return 'success';
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.driverService.delete(id);
   }
 }

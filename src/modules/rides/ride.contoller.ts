@@ -1,5 +1,3 @@
-import { UpdateRideStatusDto } from './dto/update-ride.dto';
-import { UpdateResult } from 'typeorm';
 import { Ride } from 'src/modules/rides/entities/ride.entity';
 import { CreateRideDto } from './dto/create-ride.dto';
 import {
@@ -40,8 +38,8 @@ export class RideController {
   @HttpCode(HttpStatus.OK)
   async createRide(
     @Body() createRideDto: CreateRideDto,
-    @Query('passenger_id') passenger_id: number,
-    @Query('driver_id') driver_id: number,
+    @Query('passenger_id') passenger_id: string,
+    @Query('driver_id') driver_id: string,
   ): Promise<Ride> {
     createRideDto.driverId = driver_id;
     createRideDto.passengerId = passenger_id;

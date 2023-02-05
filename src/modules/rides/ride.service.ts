@@ -1,14 +1,11 @@
-import { UpdateRideStatusDto } from './dto/update-ride.dto';
 import { Driver } from './../users/entities/driver.entity';
-import { User } from './../users/entities/user.entity';
+import { Users } from './../users/entities/user.entity';
 import { CreateRideDto } from './dto/create-ride.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Ride } from './entities/ride.entity';
 import { Point } from 'geojson';
-import { Status } from '../statuses/entities/status.entity';
-import { StatusEnum } from '../statuses/statuses.enum';
 import { RideStatus } from './status';
 import { IPaginationOptions } from 'src/utils/types/pagination-options';
 
@@ -17,8 +14,8 @@ export class RideService {
   constructor(
     @InjectRepository(Ride)
     private readonly rideRepository: Repository<Ride>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    @InjectRepository(Users)
+    private readonly userRepository: Repository<Users>,
     @InjectRepository(Driver)
     private readonly driverRepository: Repository<Driver>,
   ) { }
@@ -31,7 +28,7 @@ export class RideService {
     });
     const driver = await this.driverRepository.findOne({
       where: {
-        driver_id: createRideDto.driverId,
+        id: createRideDto.driverId,
       },
     });
 

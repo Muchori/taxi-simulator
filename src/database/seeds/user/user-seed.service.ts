@@ -1,97 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RoleEnum } from 'src/modules/roles/roles.enum';
-import { StatusEnum } from 'src/modules/statuses/statuses.enum';
-import { User } from 'src/modules/users/entities/user.entity';
+import { Users } from 'src/modules/users/entities/user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserSeedService {
   constructor(
-    @InjectRepository(User)
-    private repository: Repository<User>,
-  ) {}
+    @InjectRepository(Users)
+    private repository: Repository<Users>,
+  ) { }
 
   async run() {
-    const countAdmin = await this.repository.count({
-      where: {
-        role: {
-          id: RoleEnum.admin,
-        },
-      },
+    const admin = await this.repository.create({
+      name: 'Super Admin',
+      password: 'secret',
+      email: 'admin@admin.com',
+      // name: 'Super Admin',
+      // email: 'admin@admin.com',
+      // phoneNumber: '070123456789',
+      // password: 'secret',
     });
 
-    if (countAdmin === 0) {
-      await this.repository.save(
-        this.repository.create({
-          firstName: 'Super',
-          lastName: 'Admin',
-          email: 'admin@example.com',
-          password: 'secret',
-          role: {
-            id: RoleEnum.admin,
-            name: 'Admin',
-          },
-          status: {
-            id: StatusEnum.active,
-            name: 'Active',
-          },
-        }),
-      );
-    }
-
-    const countUser = await this.repository.count({
-      where: {
-        role: {
-          id: RoleEnum.user,
-        },
-      },
+    const adminExists = await this.repository.findOne({
+      where: { email: 'admin@admin.com' },
     });
 
-    if (countUser === 0) {
-      await this.repository.save(
-        this.repository.create({
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john.doe@example.com',
-          password: 'secret',
-          role: {
-            id: RoleEnum.user,
-            name: 'Admin',
-          },
-          status: {
-            id: StatusEnum.active,
-            name: 'Active',
-          },
-        }),
-      );
-    }
-
-    const countDriver = await this.repository.count({
-      where: {
-        role: {
-          id: RoleEnum.driver,
-        },
-      },
-    });
-
-    if (countDriver === 0) {
-      await this.repository.save(
-        this.repository.create({
-          firstName: 'Jane',
-          lastName: 'Doe',
-          email: 'jane.doe@example.com',
-          password: 'secret',
-          role: {
-            id: RoleEnum.user,
-            name: 'Driver',
-          },
-          status: {
-            id: StatusEnum.active,
-            name: 'Active',
-          },
-        }),
-      );
+    if (!adminExists) {
+      await this.repository.save(admin);
     }
   }
 }

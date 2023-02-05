@@ -20,10 +20,10 @@ export class LocationDto {
 
 export class CreateRideDto {
   @ApiProperty({ example: 1 })
-  passengerId: number;
+  passengerId: string;
 
   @ApiProperty({ example: 3 })
-  driverId: number;
+  driverId: string;
 
   // @ApiProperty({ type: () => RideStatus })
   status?: string;

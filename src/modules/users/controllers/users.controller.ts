@@ -1,91 +1,101 @@
 import {
   Controller,
+  Put,
   Get,
-  Post,
   Body,
-  Patch,
+  Res,
   Param,
-  Delete,
   UseGuards,
-  Query,
-  DefaultValuePipe,
-  ParseIntPipe,
   HttpStatus,
-  HttpCode,
-  SerializeOptions,
+  NotFoundException,
+  Delete,
 } from '@nestjs/common';
-import { UsersService } from '../services/users.service';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/modules/roles/roles.decorator';
-import { RoleEnum } from 'src/modules/roles/roles.enum';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/modules/roles/roles.guard';
-import { infinityPagination } from 'src/utils/infinity-pagination';
-
-@ApiBearerAuth()
-@Roles(RoleEnum.admin)
-@UseGuards(AuthGuard('jwt'), RolesGuard)
-@ApiTags('Users')
-@Controller({
-  path: 'passenger',
-  version: '1',
-})
+import { ApiTags } from '@nestjs/swagger';
+import { UserProfileDto } from '../dto/user-profile.dto';
+import { UserUpdateDto } from '../dto/user-update.dto';
+import { IUsers } from '../interfaces/users.interface';
+import { UsersService } from '../services/users.service';
+@ApiTags('users')
+@Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
-  @SerializeOptions({
-    groups: ['admin'],
-  })
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  create(@Body() createProfileDto: CreateUserDto) {
-    return this.usersService.create(createProfileDto);
+  @Get()
+  public async findAllUser(): Promise<IUsers[]> {
+    return this.usersService.findAll();
   }
 
-  @SerializeOptions({
-    groups: ['admin'],
-  })
-  @Get()
-  @HttpCode(HttpStatus.OK)
-  async findAll(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-  ) {
-    if (limit > 50) {
-      limit = 50;
+  @Get('/:userId')
+  public async findOneUser(@Param('userId') userId: string): Promise<IUsers> {
+    return this.usersService.findById(userId);
+  }
+
+  @Get('/:userId/profile')
+  public async getUser(
+    @Res() res,
+    @Param('userId') userId: string,
+  ): Promise<IUsers> {
+    const user = await this.usersService.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException('User does not exist!');
     }
 
-    return infinityPagination(
-      await this.usersService.findManyWithPagination({
-        page,
-        limit,
-      }),
-      { page, limit },
-    );
+    return res.status(HttpStatus.OK).json({
+      user: user,
+      status: HttpStatus.OK,
+    });
   }
 
-  @SerializeOptions({
-    groups: ['admin'],
-  })
-  @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne({ id: +id });
+  @Put('/:userId/profile')
+  public async updateProfileUser(
+    @Res() res,
+    @Param('userId') userId: string,
+    @Body() userProfileDto: UserProfileDto,
+  ): Promise<any> {
+    try {
+      await this.usersService.updateProfileUser(userId, userProfileDto);
+
+      return res.status(HttpStatus.OK).json({
+        message: 'User Updated successfully!',
+        status: HttpStatus.OK,
+      });
+    } catch (err) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Error: User not updated!',
+        status: HttpStatus.BAD_REQUEST,
+      });
+    }
   }
 
-  @SerializeOptions({
-    groups: ['admin'],
-  })
-  @Patch(':id')
-  @HttpCode(HttpStatus.OK)
-  update(@Param('id') id: number, @Body() updateProfileDto: UpdateUserDto) {
-    return this.usersService.update(id, updateProfileDto);
+  @Put('/:userId')
+  public async updateUser(
+    @Res() res,
+    @Param('userId') userId: string,
+    @Body() userUpdateDto: UserUpdateDto,
+  ) {
+    try {
+      await this.usersService.updateUser(userId, userUpdateDto);
+
+      return res.status(HttpStatus.OK).json({
+        message: 'User Updated successfully!',
+        status: 200,
+      });
+    } catch (err) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Error: User not updated!',
+        status: 400,
+      });
+    }
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.usersService.softDelete(id);
+  @Delete('/:userId')
+  public async deleteUser(@Param('userId') userId: string): Promise<void> {
+    const user = this.usersService.deleteUser(userId);
+    if (!user) {
+      throw new NotFoundException('User does not exist!');
+    }
+    return user;
   }
 }
