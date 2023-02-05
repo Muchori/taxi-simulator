@@ -1,5 +1,12 @@
 # Taxi-Simulator
 
+We need you to build a simple backend API that can be accessed by an admin user. This user
+can be hard-coded for this exercise and there is no need to manage users roles. This user will
+need to create and suspend drivers and monitor ongoing rides.
+Also we would like for you to simulate passengers calling drivers, and have you create some
+endpoints to register passengers and perform a ride simulation (no geolocation calculation is
+necessary to link the passenger with the best driver, this can be passed in the API).
+
 ## Description
 
 NestJS REST API simulating a taxi ordering ride by a passenger.
@@ -10,7 +17,7 @@ NestJS REST API simulating a taxi ordering ride by a passenger.
   - [Description](#description)
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
-  - [Technlogies used](#technlogies-used)
+  - [Technlogies and Tools used](#technlogies-and-tools-used)
   - [Quick run](#quick-run)
   - [Comfortable development](#comfortable-development)
   - [Links](#links)
@@ -30,7 +37,7 @@ NestJS REST API simulating a taxi ordering ride by a passenger.
 - [x] E2E and units tests.
 - [x] Docker.
 
-## Technlogies used
+## Technlogies and Tools used
 
 - [x] TypeScript / JavaScript
 - [x] NestJS Framework
@@ -38,6 +45,8 @@ NestJS REST API simulating a taxi ordering ride by a passenger.
 - [x] Postgis / Postgres - Database
 - [x] Jest for testing
 - [x] Shell
+- [x] Git and GitHub
+- [x] Visual Studio Code
 
 ## Quick run
 
